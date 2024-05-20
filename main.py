@@ -33,11 +33,15 @@ while True:
     0.Salir
     """
     )
-    for cuenta_unica in CUENTAS:
-        print(f"Nombre: {cuenta_unica.titular.nombre}")
-        print(f"Edad: {cuenta_unica.titular.edad}")
-        print(f"DNI: {cuenta_unica.titular.dni}")
-        print(f"Cantidad: {cuenta_unica.cantidad}")
+
+    # Muestra los datos de cada cuenta
+    for cuenta in CUENTAS:
+        print(f"Tipo de cuenta: {type(cuenta)}")
+        print(f"Nombre: {cuenta.titular.nombre}")
+        print(f"Edad: {cuenta.titular.edad}")
+        print(f"DNI: {cuenta.titular.dni}")
+        print(f"Cantidad: {cuenta.cantidad}")
+        print("-" * 15)
 
     OPCION = None
     while True:

@@ -1,6 +1,7 @@
 """Módulo de la clase Persona"""
 
 from re import fullmatch
+from constantes.dni import VALOR_MINIMO_DNI, VALOR_MAXIMO_DNI
 
 
 class Persona:
@@ -48,17 +49,13 @@ class Persona:
 
     def set_dni(self, dni: int) -> None:
         """Modifica el valor del atributo dni"""
-        # Establecer valor mínimo y máximo para el DNI
-        # En este caso es especifico para Argentina
-        valor_minimo_dni = 10000000
-        valor_maximo_dni = 99999999
 
         try:
             # Tira un error si la conversión falla
             self.dni = int(dni)
 
             # Tira un error si se cumple la condición
-            if dni < valor_minimo_dni or dni > valor_maximo_dni:
+            if dni < VALOR_MINIMO_DNI or dni > VALOR_MAXIMO_DNI:
                 raise ValueError("DNI fuera de rango")
 
         # Manejar el error

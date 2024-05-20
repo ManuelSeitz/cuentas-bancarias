@@ -2,7 +2,9 @@
 
 from re import fullmatch
 from clases.persona import Persona
+
 from constantes.listas import CUENTAS
+from constantes.dni import VALOR_MINIMO_DNI, VALOR_MAXIMO_DNI
 
 
 def crear_titular() -> Persona:
@@ -30,13 +32,9 @@ def crear_titular() -> Persona:
     while True:
         try:
             dni = int(input("DNI: "))
-            # Establecer valor mínimo y máximo para el DNI
-            # En este caso es especifico para Argentina
-            valor_minimo_dni = 10000000
-            valor_maximo_dni = 99999999
 
-            if dni < valor_minimo_dni or dni > valor_maximo_dni:
-                raise ValueError("DNI fuera de rango")
+            if dni < VALOR_MINIMO_DNI or dni > VALOR_MAXIMO_DNI:
+                raise ValueError
 
             if any(cuenta.titular.dni == dni for cuenta in CUENTAS):
                 print("Esta cuenta ya existe")
