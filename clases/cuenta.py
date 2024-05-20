@@ -6,7 +6,7 @@ from clases.persona import Persona
 class Cuenta:
     """Definición de la clase Cuenta"""
 
-    def __init__(self, titular: Persona, cantidad: float = None) -> None:
+    def __init__(self, titular: Persona, cantidad: float = 0) -> None:
         # Se asume que el titular se valida antes de instanciar la clase
         self.titular = titular
         self.cantidad = cantidad
@@ -57,15 +57,13 @@ class Cuenta:
             return
 
         cantidad_actual = self.get_cantidad()
-        if cantidad_actual is not None:
-            nueva_cantidad = cantidad_actual + cantidad_a_ingresar
-        else:
-            nueva_cantidad = cantidad_a_ingresar
+        nueva_cantidad = cantidad_actual + cantidad_a_ingresar
 
         if self.set_cantidad(nueva_cantidad):
             print("Cantidad ingresada con éxito")
         else:
             print("Fallo en la transacción")
+            raise ValueError
 
     def retirar(self, cantidad_a_retirar: float) -> None:
         """Método público por el cual se retira dinero de la cuenta"""
@@ -81,9 +79,10 @@ class Cuenta:
         margen_cantidad_negativa = -20000
         if nueva_cantidad < margen_cantidad_negativa:
             print("No es posible retirar el dinero, margen negativo excedido")
-            return
+            raise ValueError
 
         if self.set_cantidad(nueva_cantidad):
             print("Cantidad retirada con éxito")
         else:
             print("Fallo en la transacción")
+            raise ValueError

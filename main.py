@@ -1,19 +1,15 @@
 """Módulo principal donde se ejecuta el programa"""
 
-from re import fullmatch
 from datetime import datetime
 from typing import List
-from clases.persona import Persona
+
 from clases.cuenta import Cuenta
 from clases.cuenta_joven import CuentaJoven
 from clases.cuenta_vip import CuentaVIP
 from clases.plazo_fijo import PlazoFijo
 
-# Lista donde se almacenan todas las cuentas
-CUENTAS: List[Cuenta | CuentaJoven | CuentaVIP] = []
-
-# Lista donde se almacenan los plazos fijos
-PLAZOS_FIJOS: List[PlazoFijo] = []
+from constantes.listas import CUENTAS, PLAZOS_FIJOS
+from utils.crear.crear_cuenta_normal import crear_cuenta_normal
 
 
 def buscar_cuenta_por_dni() -> Cuenta | CuentaJoven | CuentaVIP | None:
@@ -39,61 +35,6 @@ def buscar_cuenta_por_dni() -> Cuenta | CuentaJoven | CuentaVIP | None:
         if cuenta.titular.dni == dni_a_buscar:
             return cuenta
     return None
-
-
-def crear_titular() -> Persona:
-    """Crea un titular"""
-    print("TITULAR")
-
-    while True:
-        nombre = input("Nombre: ")
-        if not fullmatch(r"^[a-zA-Zá-úÁ-Ú\s']+$", nombre):
-            print("El nombre no es válido")
-        else:
-            break
-
-    while True:
-        try:
-            edad = int(input("Edad: "))
-
-            if edad < 0 or edad > 120:
-                raise ValueError
-
-            break
-        except ValueError:
-            print("Edad inválida")
-
-    while True:
-        try:
-            dni = int(input("DNI: "))
-            # Establecer valor mínimo y máximo para el DNI
-            # En este caso es especifico para Argentina
-            valor_minimo_dni = 10000000
-            valor_maximo_dni = 99999999
-
-            if dni < valor_minimo_dni or dni > valor_maximo_dni:
-                raise ValueError("DNI fuera de rango")
-
-            if any(cuenta.titular.dni == dni for cuenta in CUENTAS):
-                print("Esta cuenta ya existe")
-                continue
-
-            break
-        except ValueError:
-            print("DNI inválido")
-
-    titular = Persona(nombre, edad, dni)
-    return titular
-
-
-def crear_cuenta_normal() -> None:
-    """Crea una cuenta normal"""
-    titular = crear_titular()
-
-    cuenta = Cuenta(titular)
-    CUENTAS.append(cuenta)
-    print("Cuenta creada con éxito")
-    input("Presiona Enter para continuar")
 
 
 def crear_cuenta_joven() -> None:
@@ -267,9 +208,22 @@ def realizar_transferencia() -> None:
         except ValueError:
             print("Cantidad inválida")
 
-    cuenta_ordenante.retirar(cantidad)
-    cuenta_beneficiaria.ingresar(cantidad)
+    try:
+        cuenta_ordenante.retirar(cantidad)
+    except ValueError:
+        print("Fallo en la transacción")
+        return
 
+    try:
+        cuenta_beneficiaria.ingresar(cantidad)
+    except ValueError:
+        print("Fallo en la transferencia")
+        # Devuelve la cantidad al ordenante
+        cuenta_ordenante.ingresar(cantidad)
+        input("Presiona Enter para continuar")
+        return
+
+    print("Transferencia exitosa")
     input("Presiona Enter para continuar")
 
 
@@ -340,6 +294,12 @@ while True:
     0.Salir
     """
     )
+    for cuenta_unica in CUENTAS:
+        print(f"Nombre: {cuenta_unica.titular.nombre}")
+        print(f"Edad: {cuenta_unica.titular.edad}")
+        print(f"DNI: {cuenta_unica.titular.dni}")
+        print(f"Cantidad: {cuenta_unica.cantidad}")
+
     OPCION = None
     while True:
         try:

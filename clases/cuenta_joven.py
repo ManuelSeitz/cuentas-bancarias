@@ -11,7 +11,7 @@ class CuentaJoven(Cuenta):
         self,
         titular: Persona,
         bonificacion: int,
-        cantidad: float = None,
+        cantidad: float = 0,
     ) -> None:
         """
         ARGS:
@@ -48,16 +48,11 @@ class CuentaJoven(Cuenta):
         cantidad_actual = self.get_cantidad()
         # Se le suma a la cantidad actual la cantidad a ingresar + un extra
         # respecto a la cantidad que se ingresó
-        if cantidad_actual is not None:
-            nueva_cantidad = (
-                cantidad_actual
-                + cantidad_a_ingresar
-                + (cantidad_a_ingresar * (self.get_bonificacion() / 100))
-            )
-        else:
-            nueva_cantidad = cantidad_a_ingresar + (
-                cantidad_a_ingresar * self.get_bonificacion() / 100
-            )
+        nueva_cantidad = (
+            cantidad_actual
+            + cantidad_a_ingresar
+            + (cantidad_a_ingresar * (self.get_bonificacion() / 100))
+        )
 
         if self.set_cantidad(nueva_cantidad):
             print("Cantidad ingresada con éxito")

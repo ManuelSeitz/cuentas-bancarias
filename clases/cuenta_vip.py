@@ -8,7 +8,7 @@ class CuentaVIP(Cuenta):
     """Definición de la clase CuentaVIP heredada de Cuenta"""
 
     def __init__(
-        self, titular: Persona, saldo_negativo_maximo: float, cantidad: float = None
+        self, titular: Persona, saldo_negativo_maximo: float, cantidad: float = 0
     ) -> None:
         super().__init__(titular, cantidad)
         # Se asume que el saldo negativo se valida antes de instanciar la clase
